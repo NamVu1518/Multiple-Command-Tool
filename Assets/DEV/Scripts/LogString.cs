@@ -10,15 +10,18 @@ public static class LogString
     {
         public class Error
         {
-            public const string ERR_CN001 = "CN is not define";
+            public const string ERR_CN001 = "Cannot find CN in CSV";
 
             public const string ERR_OU001 = "OU is not correct format";
             public const string ERR_OU002 = "OU is not define";
+            public const string ERR_OU003 = "Cannot find OU in CSV";
 
             public const string ERR_DC001 = "DC is not correct format";
             public const string ERR_DC002 = "DC is not define";
+            public const string ERR_DC003 = "Cannot find DC in CSV";
 
-            public const string ERR_PATH001 = "Path is not define";
+            public const string ERR_PATH001 = "Path to CSV file is not define";
+            public const string ERR_PATH002 = "Path to save diretory is not define";
 
             public const string ERR_PWD001 = "Password is not define";
         }

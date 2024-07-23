@@ -32,7 +32,7 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
         set => pathOfData = value;
     }
 
-    public string PathOfLocationBat
+    public string PathOfDirectoryFileRun
     {
         get => pathOfLocationBat; 
         set => pathOfLocationBat = value;
@@ -75,16 +75,16 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
         return stringData.ToString();
     }
 
-    public bool Validatepath()
+    public bool ValidatePath()
     {
         if (string.IsNullOrEmpty(PathOfData))
         {
             LogString.LogOnError(LogString.Log.Error.ERR_PATH001);
             return false;
         }
-        if (string.IsNullOrEmpty(PathOfLocationBat))
+        if (string.IsNullOrEmpty(PathOfDirectoryFileRun))
         {
-            LogString.LogOnError(LogString.Log.Error.ERR_PATH001);
+            LogString.LogOnError(LogString.Log.Error.ERR_PATH002);
             return false;
         }
 
@@ -93,32 +93,7 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
 
     public bool InputValidateIsTrue()
     {
-        if (Validatepath() == false) return false;
-
-        if (string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputDC))
-        {
-            LogString.LogOnError(LogString.Log.Error.ERR_DC002);
-            return false;
-        }
-        if ((UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputOU))
-            ||
-            (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && Validate.Instance.HasWhatTitle[TITLE.OU].hasTitle))
-        {
-            LogString.LogOnError(LogString.Log.Error.ERR_OU001);
-            return false;
-        }
-        if ((UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputPWD))
-            ||
-            (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && Validate.Instance.HasWhatTitle[TITLE.PWD].hasTitle))
-        {
-            LogString.LogOnError(LogString.Log.Error.ERR_PWD001);
-            return false;
-        }
-        if (!Validate.Instance.HasWhatTitle[TITLE.CN].hasTitle)
-        {
-            LogString.LogOnError(LogString.Log.Error.ERR_CN001);
-            return false;
-        }
+        //UNDONE
 
         ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
         return true;
@@ -126,9 +101,9 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
 
     public void PrcessingAll()
     {
-        if(Validatepath())
+        if(ValidatePath())
         {
-            string path = Path.Combine(PathOfLocationBat, "CREATE_USER_" + DateTime.Now.ToString().Replace("/", "_").Replace(@" ", "_").Replace(":", "_").Replace(@"\", @"\\") + ".bat");
+            string path = Path.Combine(PathOfDirectoryFileRun, "CREATE_USER_" + DateTime.Now.ToString().Replace("/", "_").Replace(@" ", "_").Replace(":", "_").Replace(@"\", @"\\") + ".bat");
             Validate.Instance.CompleteDataTable(PathOfData);
 
             if (InputValidateIsTrue())

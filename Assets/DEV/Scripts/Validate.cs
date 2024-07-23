@@ -53,16 +53,12 @@ public class Validate : Singleton<Validate>
         get { return hasWhatTitle; }
     }
 
-    private StringBuilder log = new StringBuilder();
-
     private string[,] data;
 
     public string[,] Data
     {
         get { return data; }
     }
-
-
 
     private bool IsTitle(string strCheck, int col)
     {
@@ -115,22 +111,21 @@ public class Validate : Singleton<Validate>
     public UserProfile UploadDataToUserProfileSetting(int row)
     {
         UserProfile userProfile = new UserProfile();
-        
-        if (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && hasWhatTitle[TITLE.OU].hasTitle){ userProfile.OU = GetDataFromRTable(TITLE.OU, row);     } 
-        else{ userProfile.OU = UIManager.Instance.GetUI<UICreateUser>().InputOU;  }
+
+        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildDC() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.DC].hasTitle) { userProfile.DC = GetDataFromRTable(TITLE.DC, row); }
+        else { userProfile.DC = UIManager.Instance.GetUI<UICreateUser>().InputDC.text; }
+
+        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildOU() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.OU].hasTitle) { userProfile.OU = GetDataFromRTable(TITLE.OU, row); }
+        else { userProfile.OU = UIManager.Instance.GetUI<UICreateUser>().InputOU.text; }
 
         userProfile.CN = DataUtility.Standardized(GetDataFromRTable(TITLE.CN, row));
 
-        if (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && hasWhatTitle[TITLE.PWD].hasTitle) { userProfile.PWD = GetDataFromRTable(TITLE.PWD, row);     }
-        else { userProfile.PWD = UIManager.Instance.GetUI<UICreateUser>().InputPWD;  }
-        
-        userProfile.DC = UIManager.Instance.GetUI<UICreateUser>().InputDC; 
+        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildPassword() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.PWD].hasTitle) { userProfile.PWD = GetDataFromRTable(TITLE.PWD, row); }
+        else { userProfile.PWD = UIManager.Instance.GetUI<UICreateUser>().InputPassword.text; }
 
         if (hasWhatTitle[TITLE.FN].hasTitle) { userProfile.FN = GetDataFromRTable(TITLE.FN, row); }
-        else { userProfile.FN = "user"; }
 
         if (hasWhatTitle[TITLE.LN].hasTitle) { userProfile.LN = GetDataFromRTable(TITLE.LN, row); }
-        else { userProfile.LN = row.ToString(); }
 
         return userProfile;
     }
@@ -142,10 +137,8 @@ public class Validate : Singleton<Validate>
         return userProfile;
     }
 
-
     private string GetDataFromRTable(TITLE title, int row)
     {
-        Debug.Log(title + " " + hasWhatTitle[title].col);
         return data[row, hasWhatTitle[title].col];
     }
 

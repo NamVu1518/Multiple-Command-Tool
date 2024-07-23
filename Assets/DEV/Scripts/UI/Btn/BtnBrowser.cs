@@ -18,7 +18,7 @@ public class BtnBrowser : MonoBehaviour
     public void OpenFolderWindowForFileBat()
     {
         MainProgramProcess.Instance.OpenFExAndAssignLocationBatPath();
-        StartCoroutine(SetTextPath(MainProgramProcess.Instance.PathOfLocationBat));
+        StartCoroutine(SetTextPath(MainProgramProcess.Instance.PathOfDirectoryFileRun));
     }
 
     private IEnumerator SetTextPath(string path)
