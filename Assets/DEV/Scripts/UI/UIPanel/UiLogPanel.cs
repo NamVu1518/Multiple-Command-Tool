@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class LogPanel : MonoBehaviour
+public class UILogPanel : UICanvas
 {
     [SerializeField] private TMP_Text logText;
     [SerializeField] private Scrollbar scrollbar;

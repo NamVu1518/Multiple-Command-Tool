@@ -46,11 +46,16 @@ public static class CommandCMD
             sub += $", DC={DCArray[i]}";
         }
 
-        command += Mark(sub);
-        command += "-upn " + Mark(CN + "@" + DC);
-        command += "-fn " + Mark(fn);
-        command += "-ln " + Mark(ln);
-        command += "-pwd " + Mark(PWD);
+        command += LogString.Mark(sub);
+        command += "-upn " + LogString.Mark(CN + "@" + DC);
+
+        if (!string.IsNullOrEmpty(fn) && !string.IsNullOrEmpty(ln))
+        {
+            command += "-fn " + LogString.Mark(fn);
+            command += "-ln " + LogString.Mark(ln);
+        }
+
+        command += "-pwd " + LogString.Mark(PWD);
         command += "-disabled no";
         
         return command ;
@@ -73,7 +78,7 @@ public static class CommandCMD
             sub += $", DC={DCArray[i]}";
         }
 
-        command += Mark(sub);
+        command += LogString.Mark(sub);
         command += "-addmbr ";
 
         sub = "CN=" + CN_User;
@@ -89,25 +94,13 @@ public static class CommandCMD
             sub += $", DC={DCArray[i]}";
         }
 
-        command += Mark(sub);
+        command += LogString.Mark(sub);
 
         return command;
     }
 
-    private static string Mark(string str)
-    {
-        return "\"" + str + "\" ";    
-    }
-
     public static void RunBat(string path)
     {
-        //Process batProc = new Process();
-        //batProc.StartInfo.FileName = "powershell.exe";
-        //batProc.StartInfo.Arguments = $"-ExecutionPolicy Bypass -Command \"Start-Process '{path}' -NoNewWindow -Wait\"";
-        //batProc.StartInfo.UseShellExecute = false;
-        //batProc.StartInfo.CreateNoWindow = false;
-        //batProc.Start();
-
         Process batProc = new Process();
         batProc.StartInfo.FileName = path;
         batProc.StartInfo.UseShellExecute = true;
@@ -116,7 +109,7 @@ public static class CommandCMD
 
         batProc.WaitForExit();
 
-        Validate.Instance.LogOnSystem("Done !!!");
+        LogString.LogOnError(LogString.Log.System.SYS_DONE);
         ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
     }
 
@@ -124,7 +117,7 @@ public static class CommandCMD
     {
         OU = VietnameseProcess.Instance.RemoveSign4VietnameseString(OU);
         string[] result = OU.Split("/");
-        if (result.Length <= 0) Validate.Instance.LogOnError("OU is not correct format");
+        if (result.Length <= 0) LogString.LogOnError(LogString.Log.Error.ERR_OU001);
         return result;
     }
 
@@ -132,7 +125,7 @@ public static class CommandCMD
     {
         DC = VietnameseProcess.Instance.RemoveSign4VietnameseString(DC);
         string[] result = DC.Split(".");
-        if (result.Length <= 1) Validate.Instance.LogOnError("DC is not correct format");
+        if (result.Length <= 1) LogString.LogOnError(LogString.Log.Error.ERR_DC001);
         return result;
     }
 

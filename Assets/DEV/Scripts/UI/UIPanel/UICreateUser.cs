@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIManager : Singleton<UIManager>
+public class UICreateUser : UICanvas
 {
     [SerializeField] private ToggDefine toggleOU;
     [SerializeField] private ToggDefine toggleGroup;
@@ -13,11 +12,9 @@ public class UIManager : Singleton<UIManager>
 
     [SerializeField] private TMP_InputField inputDC;
 
-    [SerializeField] private LogPanel logPanel;
-
     public bool IsOnToggOU
     {
-        get => toggleOU.Toggle.isOn; 
+        get => toggleOU.Toggle.isOn;
         set => toggleOU.Toggle.isOn = value;
     }
 
@@ -55,11 +52,5 @@ public class UIManager : Singleton<UIManager>
     {
         get => inputDC.text;
         set => inputDC.text = value;
-    }
-
-    public void ChangeLog(StringBuilder stringBuilder)
-    {
-        logPanel.ChangeLog(stringBuilder.ToString());
-        logPanel.ResetScroolBar();
     }
 }

@@ -79,12 +79,12 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
     {
         if (string.IsNullOrEmpty(PathOfData))
         {
-            Validate.Instance.LogOnError("Path data file is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_PATH001);
             return false;
         }
         if (string.IsNullOrEmpty(PathOfLocationBat))
         {
-            Validate.Instance.LogOnError("Path of folder for batch file is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_PATH001);
             return false;
         }
 
@@ -95,28 +95,28 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
     {
         if (Validatepath() == false) return false;
 
-        if (string.IsNullOrEmpty(UIManager.Instance.InputDC))
+        if (string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputDC))
         {
-            Validate.Instance.LogOnError("DC is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_DC002);
             return false;
         }
-        if ((UIManager.Instance.IsOnToggOU && string.IsNullOrEmpty(UIManager.Instance.InputOU))
+        if ((UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputOU))
             ||
-            (!UIManager.Instance.IsOnToggOU && Validate.Instance.HasWhatTitle[TITLE.OU].hasTitle))
+            (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && Validate.Instance.HasWhatTitle[TITLE.OU].hasTitle))
         {
-            Validate.Instance.LogOnError("OU is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_OU001);
             return false;
         }
-        if ((UIManager.Instance.IsOnToggPWD && string.IsNullOrEmpty(UIManager.Instance.InputPWD))
+        if ((UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && string.IsNullOrEmpty(UIManager.Instance.GetUI<UICreateUser>().InputPWD))
             ||
-            (!UIManager.Instance.IsOnToggPWD && Validate.Instance.HasWhatTitle[TITLE.PWD].hasTitle))
+            (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && Validate.Instance.HasWhatTitle[TITLE.PWD].hasTitle))
         {
-            Validate.Instance.LogOnError("PWD is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_PWD001);
             return false;
         }
         if (!Validate.Instance.HasWhatTitle[TITLE.CN].hasTitle)
         {
-            Validate.Instance.LogOnError("CN is not define");
+            LogString.LogOnError(LogString.Log.Error.ERR_CN001);
             return false;
         }
 
@@ -134,7 +134,7 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
             if (InputValidateIsTrue())
             {
                 ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_RUN);
-                Validate.Instance.LogOnSystem("Running . . .");
+                LogString.LogOnError(LogString.Log.System.SYS_RUNNING);
                 CommandCMD.WriteFileBat(LoopToAddUser(), path);
                 CommandCMD.RunBat(path);
             }

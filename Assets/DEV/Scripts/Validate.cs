@@ -116,15 +116,15 @@ public class Validate : Singleton<Validate>
     {
         UserProfile userProfile = new UserProfile();
         
-        if (!UIManager.Instance.IsOnToggOU && hasWhatTitle[TITLE.OU].hasTitle){ userProfile.OU = GetDataFromRTable(TITLE.OU, row);     } 
-        else{ userProfile.OU = UIManager.Instance.InputOU;  }
+        if (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggOU && hasWhatTitle[TITLE.OU].hasTitle){ userProfile.OU = GetDataFromRTable(TITLE.OU, row);     } 
+        else{ userProfile.OU = UIManager.Instance.GetUI<UICreateUser>().InputOU;  }
 
         userProfile.CN = DataUtility.Standardized(GetDataFromRTable(TITLE.CN, row));
 
-        if (!UIManager.Instance.IsOnToggPWD && hasWhatTitle[TITLE.PWD].hasTitle) { userProfile.PWD = GetDataFromRTable(TITLE.PWD, row);     }
-        else { userProfile.PWD = UIManager.Instance.InputPWD;  }
+        if (!UIManager.Instance.GetUI<UICreateUser>().IsOnToggPWD && hasWhatTitle[TITLE.PWD].hasTitle) { userProfile.PWD = GetDataFromRTable(TITLE.PWD, row);     }
+        else { userProfile.PWD = UIManager.Instance.GetUI<UICreateUser>().InputPWD;  }
         
-        userProfile.DC = UIManager.Instance.InputDC; 
+        userProfile.DC = UIManager.Instance.GetUI<UICreateUser>().InputDC; 
 
         if (hasWhatTitle[TITLE.FN].hasTitle) { userProfile.FN = GetDataFromRTable(TITLE.FN, row); }
         else { userProfile.FN = "user"; }
@@ -147,35 +147,6 @@ public class Validate : Singleton<Validate>
     {
         Debug.Log(title + " " + hasWhatTitle[title].col);
         return data[row, hasWhatTitle[title].col];
-    }
-
-    public void LogOnError(string message)
-    {
-        log.Append(BorderText(ColorTextRed("ERROR")) + " " + message + "\n\n");
-        UIManager.Instance.ChangeLog(log);
-        ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_ERROR);
-    }
-
-    public void LogOnSystem(string message)
-    {
-        log.Append(BorderText(ColorTextGreen("SYS")) + " " + message + "\n\n");
-        UIManager.Instance.ChangeLog(log);
-        ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_RUN);
-    }
-
-    public string ColorTextRed(string str)
-    {
-        return "<color=red>" + str + "</color>";
-    }
-
-    public string ColorTextGreen(string str)
-    {
-        return "<color=green>" + str + "</color>";
-    }
-
-    public string BorderText(string str)
-    {
-        return "[" + str + "]";
     }
 
     private void Awake()
