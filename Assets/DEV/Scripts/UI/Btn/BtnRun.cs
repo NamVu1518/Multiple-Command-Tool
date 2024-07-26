@@ -9,11 +9,6 @@ public class BtnRun : MonoBehaviour
 
     void Start()
     {
-        btnRun.onClick.AddListener(RunCMDCode);
-    }
-
-    private void RunCMDCode()
-    {
-       
+        btnRun.onClick.AddListener(MainProgramProcess.Instance.PrcessingAll);
     }
 }

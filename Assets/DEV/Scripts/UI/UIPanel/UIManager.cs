@@ -45,16 +45,15 @@ public class UIManager : Singleton<UIManager>
         if (!IsInitialized<T>())
         {
             T uiCanvas = GetUIPrefab<T>();
-            Transform parent = canvasParent;
-            if (uiCanvas.Parent != null)
-            {
-                parent = uiCanvas.Parent;
-            }
-
-            UICanvas canvas = Instantiate(uiCanvas, parent);
+            UICanvas canvas = Instantiate(uiCanvas, canvasParent);
             dicUI[typeof(T)] = canvas;
         }
 
+        return dicUI[typeof(T)] as T;
+    }
+
+    public T GetInstanceUI<T>() where T : UICanvas
+    {
         return dicUI[typeof(T)] as T;
     }
 
@@ -89,5 +88,11 @@ public class UIManager : Singleton<UIManager>
     public bool IsOpening<T>() where T : UICanvas
     {
         return IsInitialized<T>() && dicUI[typeof(T)].gameObject.activeInHierarchy;
+    }
+
+    private void Awake()
+    {
+        GetUI<UICreateUser>();
+        GetUI<UILogPanel>();
     }
 }

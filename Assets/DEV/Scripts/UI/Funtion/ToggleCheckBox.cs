@@ -6,17 +6,12 @@ using UnityEngine.UI;
 
 public class ToggleCheckBox : MonoBehaviour
 {
-    [SerializeField] private bool interaction = true;
     [SerializeField] private Image mark;
     [SerializeField] private Button toggle;
     
-    public bool isOn => mark.IsActive(); 
+    public bool interactable = true;
 
-    public bool Interaction
-    {
-        get { return interaction; }
-        set { interaction = value; }
-    }
+    public bool isOn => mark.IsActive(); 
 
     public Button Toggle
     {
@@ -34,7 +29,7 @@ public class ToggleCheckBox : MonoBehaviour
 
     public void OnOrOffToggle()
     {
-        if (interaction)
+        if (interactable)
         {
             mark.gameObject.SetActive(!mark.IsActive());
         }
@@ -43,5 +38,10 @@ public class ToggleCheckBox : MonoBehaviour
     public void SetStatus(bool status)
     {
         mark.gameObject.SetActive(status);
+    }
+
+    public void OnClickButton()
+    {
+        toggle.onClick.Invoke();
     }
 }

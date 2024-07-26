@@ -108,28 +108,6 @@ public class Validate : Singleton<Validate>
         return hasWhatTitle;
     }
 
-    public UserProfile UploadDataToUserProfileSetting(int row)
-    {
-        UserProfile userProfile = new UserProfile();
-
-        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildDC() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.DC].hasTitle) { userProfile.DC = GetDataFromRTable(TITLE.DC, row); }
-        else { userProfile.DC = UIManager.Instance.GetUI<UICreateUser>().InputDC.text; }
-
-        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildOU() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.OU].hasTitle) { userProfile.OU = GetDataFromRTable(TITLE.OU, row); }
-        else { userProfile.OU = UIManager.Instance.GetUI<UICreateUser>().InputOU.text; }
-
-        userProfile.CN = DataUtility.Standardized(GetDataFromRTable(TITLE.CN, row));
-
-        if (UIManager.Instance.GetUI<UICreateUser>().WhichStatusFeildPassword() == DefineStatus.DEFINE_IN_CSV && hasWhatTitle[TITLE.PWD].hasTitle) { userProfile.PWD = GetDataFromRTable(TITLE.PWD, row); }
-        else { userProfile.PWD = UIManager.Instance.GetUI<UICreateUser>().InputPassword.text; }
-
-        if (hasWhatTitle[TITLE.FN].hasTitle) { userProfile.FN = GetDataFromRTable(TITLE.FN, row); }
-
-        if (hasWhatTitle[TITLE.LN].hasTitle) { userProfile.LN = GetDataFromRTable(TITLE.LN, row); }
-
-        return userProfile;
-    }
-
     public GroupProfile UploadDataToGroupProfileSetting(int row)
     {
         GroupProfile userProfile = new GroupProfile();
@@ -137,7 +115,7 @@ public class Validate : Singleton<Validate>
         return userProfile;
     }
 
-    private string GetDataFromRTable(TITLE title, int row)
+    public string GetDataFromTable(TITLE title, int row)
     {
         return data[row, hasWhatTitle[title].col];
     }

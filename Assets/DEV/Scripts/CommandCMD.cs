@@ -109,7 +109,7 @@ public static class CommandCMD
 
         batProc.WaitForExit();
 
-        LogString.LogOnError(LogString.Log.System.SYS_DONE);
+        LogString.LogSystem(LogString.Log.System.SYS_DONE);
         ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
     }
 
@@ -117,7 +117,7 @@ public static class CommandCMD
     {
         OU = VietnameseProcess.Instance.RemoveSign4VietnameseString(OU);
         string[] result = OU.Split("/");
-        if (result.Length <= 0) LogString.LogOnError(LogString.Log.Error.ERR_OU001);
+        if (result.Length <= 0) LogString.LogError(LogString.Log.Error.ERR_OU001);
         return result;
     }
 
@@ -125,7 +125,7 @@ public static class CommandCMD
     {
         DC = VietnameseProcess.Instance.RemoveSign4VietnameseString(DC);
         string[] result = DC.Split(".");
-        if (result.Length <= 1) LogString.LogOnError(LogString.Log.Error.ERR_DC001);
+        if (result.Length <= 1) LogString.LogError(LogString.Log.Error.ERR_DC001);
         return result;
     }
 

@@ -6,7 +6,8 @@ public enum LifeStatus
 {
     ON_WAIT = 0,
     ON_RUN = 1,
-    ON_ERROR = 2
+    ON_ERROR = 2,
+    ON_WARNING = 3
 }
 
 public class ProgramLifeCycle : Singleton<ProgramLifeCycle>
@@ -18,6 +19,8 @@ public class ProgramLifeCycle : Singleton<ProgramLifeCycle>
     public bool IsError => _lifeStatus == LifeStatus.ON_ERROR;
 
     public bool IsRun => _lifeStatus == LifeStatus.ON_RUN;
+
+    public bool IsWarming => _lifeStatus == LifeStatus.ON_WARNING;
 
     public void ChangStatus(LifeStatus lifeStatus)
     {

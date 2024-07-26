@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class UICanvas : MonoBehaviour
 {
-    [SerializeField] private Transform parent;
-    
-    public Transform Parent { get { return parent; } }
-
-
     public virtual void Setup()
     {
 

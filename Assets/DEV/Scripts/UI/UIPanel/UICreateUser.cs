@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum DefineStatus
 {
@@ -14,7 +16,11 @@ public enum DefineStatus
 
 public class UICreateUser : UICanvas
 {
+    [Header("Chang Mode")]
+    [SerializeField] private Dropdown dropdown;
+
     [Header("Check Box")]
+    [SerializeField] private CheckBox checkBoxMultipleChoise;
     [SerializeField] private CheckBox checkBoxDC;
     [SerializeField] private CheckBox checkBoxOU;
     [SerializeField] private CheckBox checkBoxPassword;
@@ -44,6 +50,19 @@ public class UICreateUser : UICanvas
     public TMP_InputField InputGroup
     {
         get { return inputGroup; }
+    }
+
+    public void ChangeMode()
+    {
+        int mode = dropdown.value;
+        if (mode < 0 || mode >= Enum.GetValues(typeof(MODE)).Length) return; 
+        MainProgramProcess.Instance.ChangeMode((MODE)mode);
+    }
+
+    public void ChangeMultipleChoise(int choise)
+    {
+        if (choise < 0 || choise >= Enum.GetValues(typeof(MultipleChoise)).Length) return;
+        MainProgramProcess.Instance.ChangeMode((MODE)choise);
     }
 
     public DefineStatus WhichStatusFeildDC() 
@@ -98,56 +117,8 @@ public class UICreateUser : UICanvas
         return DefineStatus.UNDEFINE;
     }
 
-    public void SetinteractableInputFeild(TMP_InputField inputField, bool interactable)
-    {
-        inputField.interactable = interactable;
-    }
-
-    public void SetUp()
-    {
-        if (checkBoxDC != null && checkBoxDC.Toggles != null)
-        {
-            if (checkBoxDC.Toggles[0] != null)
-            {
-                checkBoxDC.Toggles[0].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputDC, true); });
-            }
-            if (checkBoxDC.Toggles[1] != null)
-            {
-                checkBoxDC.Toggles[1].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputDC, false); });
-            }
-        }
-
-        if (checkBoxOU != null && checkBoxOU.Toggles != null)
-        {
-            if (checkBoxOU.Toggles[0] != null)
-            {
-                checkBoxOU.Toggles[0].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputOU, true); });
-            }
-            if (checkBoxOU.Toggles[1] != null)
-            {
-                checkBoxOU.Toggles[1].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputOU, false); });
-            }
-        }
-
-        if (checkBoxPassword != null && checkBoxPassword.Toggles != null)
-        {
-            if (checkBoxPassword.Toggles[0] != null)
-            {
-                checkBoxPassword.Toggles[0].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputPassword, true); });
-            }
-            if (checkBoxPassword.Toggles[1] != null)
-            {
-                checkBoxPassword.Toggles[1].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputPassword, false); });
-            }
-            if (checkBoxPassword.Toggles[2] != null)
-            {
-                checkBoxPassword.Toggles[2].Toggle.onClick.AddListener(() => { SetinteractableInputFeild(inputPassword, false); });
-            }
-        }
-    }
-
     private void Awake()
     {
-        SetUp();
+        checkBoxMultipleChoise.Toggles[checkBoxMultipleChoise.IndexOfDefault].Toggle.onClick.Invoke();
     }
 }

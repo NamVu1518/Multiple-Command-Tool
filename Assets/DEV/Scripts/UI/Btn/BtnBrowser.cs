@@ -11,14 +11,14 @@ public class BtnBrowser : MonoBehaviour
 
     public void OpenFileWindowForData()
     {
-        MainProgramProcess.Instance.OpenFExAndAssignDataPath();
-        StartCoroutine(SetTextPath(MainProgramProcess.Instance.PathOfData));
+        MainProgramProcess.Instance.CreateUserProcess.OpenFExAndAssignDataPath();
+        StartCoroutine(SetTextPath(MainProgramProcess.Instance.CreateUserProcess.PathOfData));
     }
 
     public void OpenFolderWindowForFileBat()
     {
-        MainProgramProcess.Instance.OpenFExAndAssignLocationBatPath();
-        StartCoroutine(SetTextPath(MainProgramProcess.Instance.PathOfDirectoryFileRun));
+        MainProgramProcess.Instance.CreateUserProcess.OpenFExAndAssignLocationRunFilePath();
+        StartCoroutine(SetTextPath(MainProgramProcess.Instance.CreateUserProcess.PathOfDirectoryFileRun));
     }
 
     private IEnumerator SetTextPath(string path)

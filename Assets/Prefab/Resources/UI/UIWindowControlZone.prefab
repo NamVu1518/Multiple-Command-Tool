@@ -324,7 +324,6 @@ GameObject:
   - component: {fileID: 4946213492445643991}
   - component: {fileID: 1517600784894880605}
   - component: {fileID: 7608774087898479457}
-  - component: {fileID: 2650951618769865780}
   m_Layer: 5
   m_Name: UIWindowControlZone
   m_TagString: Untagged
@@ -419,19 +418,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &2650951618769865780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4577296787928322509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e067c077df758c48b1d3caec1f4f970, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 0}
 --- !u!1 &7357645629725248934
 GameObject:
   m_ObjectHideFlags: 0
