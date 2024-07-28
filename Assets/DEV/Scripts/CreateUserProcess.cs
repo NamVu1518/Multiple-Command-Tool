@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CreateUserProcess
 {
@@ -58,6 +60,7 @@ public class CreateUserProcess
         int count = Validate.Instance.Data.GetLength(0) - 1;
         for (int i = 1; i <= count; i++)
         {
+            if (ProgramLifeCycle.Instance.IsError) return stringData.ToString();
             stringData.Append(CommandCMD.CommandCreateUser(UploadDataToUserProfileSetting(i)));
             stringData.Append("\n");
         }
@@ -81,20 +84,20 @@ public class CreateUserProcess
         return true;
     }
 
-    public bool InputValidateIsTrue()
+    public bool InputValidateMultipleIsTrue()
     {
-        if (Validate.Instance.HasWhatTitle[TITLE.CN].hasTitle)
+        if (!Validate.Instance.HasWhatTitle[TITLE.CN].hasTitle)
         {
             LogString.LogError(LogString.Log.Error.ERR_CN001);
             return false;
         }
 
-        if (Validate.Instance.HasWhatTitle[TITLE.FN].hasTitle)
+        if (!Validate.Instance.HasWhatTitle[TITLE.FN].hasTitle)
         {
             LogString.LogWarning(LogString.Log.Warning.WARN_FN001);
         }
 
-        if (Validate.Instance.HasWhatTitle[TITLE.LN].hasTitle)
+        if (!Validate.Instance.HasWhatTitle[TITLE.LN].hasTitle)
         {
             LogString.LogWarning(LogString.Log.Warning.WARN_LN001);
         }
@@ -136,6 +139,45 @@ public class CreateUserProcess
         }
 
         ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
+        return true;
+    }
+
+    public bool InputValidateSingleIsTrue()
+    {
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputCN.text))
+        {
+            LogString.LogError(LogString.Log.Error.ERR_CN002);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputFN.text))
+        {
+            LogString.LogWarning(LogString.Log.Warning.WARN_FN001);
+        }
+
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputLN.text))
+        {
+            LogString.LogWarning(LogString.Log.Warning.WARN_LN001);
+        }
+
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputDC.text))
+        {
+            LogString.LogError(LogString.Log.Error.ERR_DC002);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputOU.text))
+        {
+            LogString.LogError(LogString.Log.Error.ERR_OU002);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputPassword.text))
+        {
+            LogString.LogError(LogString.Log.Error.ERR_PWD001);
+            return false;
+        }
+
         return true;
     }
 
@@ -182,19 +224,67 @@ public class CreateUserProcess
         return userProfile;
     }
 
-    public void PrcessingRun()
+    private UserProfile UploadDataToUserProfileSetting()
     {
-        if (ValidatePath())
-        {
-            string path = Path.Combine(PathOfDirectoryFileRun, "CREATE_USER_" + DateTime.Now.ToString().Replace("/", "_").Replace(@" ", "_").Replace(":", "_").Replace(@"\", @"\\") + ".ps1");
-            Validate.Instance.CompleteDataTable(PathOfData);
+        UserProfile userProfile = new UserProfile();
 
-            if (InputValidateIsTrue())
+        userProfile.CN = UIManager.Instance.GetInstanceUI<UICreateUser>().InputCN.text;
+        userProfile.DC = UIManager.Instance.GetInstanceUI<UICreateUser>().InputDC.text;
+        userProfile.OU = UIManager.Instance.GetInstanceUI<UICreateUser>().InputOU.text;
+        userProfile.PWD = UIManager.Instance.GetInstanceUI<UICreateUser>().InputPassword.text;
+        if (!string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputFN.text)
+            && !string.IsNullOrEmpty(UIManager.Instance.GetInstanceUI<UICreateUser>().InputLN.text)) 
+        {
+            userProfile.FN = UIManager.Instance.GetInstanceUI<UICreateUser>().InputFN.text;
+            userProfile.LN = UIManager.Instance.GetInstanceUI<UICreateUser>().InputLN.text;
+        }
+
+        return userProfile;
+    }
+
+    public void PrcessingRun(bool runNow = true)
+    {
+        if (MainProgramProcess.Instance.MultipleChoise == MultipleChoise.MULTIPLE)
+        {
+            if (ValidatePath())
+            {
+                string path = Path.Combine(PathOfDirectoryFileRun, "CREATE_USER_" + DateTime.Now.ToString().Replace("/", "_").Replace(@" ", "_").Replace(":", "_").Replace(@"\", @"\\") + ".ps1");
+                Validate.Instance.CompleteDataTable(PathOfData);
+
+                if (InputValidateMultipleIsTrue())
+                {
+                    ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_RUN);
+                    LogString.LogSystem(LogString.Log.System.SYS_RUNNING);
+                    
+                    string data = LoopToAddUser();
+
+                    if (ProgramLifeCycle.Instance.IsError) return;
+                        
+                    CommandCMD.WriteFilePS1(data, path);
+
+                    if (!runNow)
+                    {
+                        LogString.LogSystem(LogString.Log.System.SYS_DONE);
+                        return;
+                    }
+
+                    CommandCMD.RunCommandPS1(path, false);                   
+                }
+            }
+        }
+        else if (MainProgramProcess.Instance.MultipleChoise == MultipleChoise.SINGLE)
+        {
+            if (InputValidateSingleIsTrue())
             {
                 ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_RUN);
                 LogString.LogSystem(LogString.Log.System.SYS_RUNNING);
-                CommandCMD.WriteFileBat(LoopToAddUser(), path);
-                CommandCMD.RunBat(path);
+                string data = CommandCMD.CommandCreateUser(UploadDataToUserProfileSetting());
+
+                if (!ProgramLifeCycle.Instance.IsError)
+                {
+                    CommandCMD.RunCommandPS1(data, true);
+                    CommandCMD.RunCommandPS1(data, true);
+                }
             }
         }
     }

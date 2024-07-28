@@ -17,7 +17,7 @@ public enum DefineStatus
 public class UICreateUser : UICanvas
 {
     [Header("Chang Mode")]
-    [SerializeField] private Dropdown dropdown;
+    [SerializeField] private TMP_Dropdown dropdown;
 
     [Header("Check Box")]
     [SerializeField] private CheckBox checkBoxMultipleChoise;
@@ -27,10 +27,18 @@ public class UICreateUser : UICanvas
     [SerializeField] private CheckBox checkBoxGroup;
 
     [Header("Input Feild")]
+    [SerializeField] private TMP_InputField inputCN;
     [SerializeField] private TMP_InputField inputDC;
     [SerializeField] private TMP_InputField inputOU;
+    [SerializeField] private TMP_InputField inputFN;
+    [SerializeField] private TMP_InputField inputLN;
     [SerializeField] private TMP_InputField inputPassword;
     [SerializeField] private TMP_InputField inputGroup;
+
+    public TMP_InputField InputCN
+    {
+        get { return inputCN; }
+    }
 
     public TMP_InputField InputDC
     {
@@ -40,6 +48,16 @@ public class UICreateUser : UICanvas
     public TMP_InputField InputOU
     {
         get { return inputOU; }
+    }
+
+    public TMP_InputField InputFN
+    {
+        get { return inputFN; }
+    }
+
+    public TMP_InputField InputLN
+    {
+        get { return inputLN; }
     }
 
     public TMP_InputField InputPassword
@@ -62,7 +80,12 @@ public class UICreateUser : UICanvas
     public void ChangeMultipleChoise(int choise)
     {
         if (choise < 0 || choise >= Enum.GetValues(typeof(MultipleChoise)).Length) return;
-        MainProgramProcess.Instance.ChangeMode((MODE)choise);
+        MainProgramProcess.Instance.ChangeMultipleChoise((MultipleChoise)choise);
+    }
+
+    public void ChangeProgramOnWaitStatus()
+    {
+        ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
     }
 
     public DefineStatus WhichStatusFeildDC() 
@@ -85,11 +108,11 @@ public class UICreateUser : UICanvas
     {
         if (checkBoxOU == null) return DefineStatus.UNDEFINE;
 
-        if (checkBoxPassword.IndexToggleNow == 0)
+        if (checkBoxOU.IndexToggleNow == 0)
         {
             return DefineStatus.DEFINE_HERE;
         }
-        else if (checkBoxPassword.IndexToggleNow == 1)
+        else if (checkBoxOU.IndexToggleNow == 1)
         {
             return DefineStatus.DEFINE_IN_CSV;
         }
@@ -117,7 +140,7 @@ public class UICreateUser : UICanvas
         return DefineStatus.UNDEFINE;
     }
 
-    private void Awake()
+    private void Start()
     {
         checkBoxMultipleChoise.Toggles[checkBoxMultipleChoise.IndexOfDefault].Toggle.onClick.Invoke();
     }

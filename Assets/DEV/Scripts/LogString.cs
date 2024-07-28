@@ -10,6 +10,7 @@ public static class LogString
         public class Error
         {
             public const string ERR_CN001 = "Cannot find CN in CSV";
+            public const string ERR_CN002 = "CN feild is blank";
 
             public const string ERR_OU001 = "OU is not correct format";
             public const string ERR_OU002 = "OU feild is blank";
@@ -75,7 +76,7 @@ public static class LogString
 
     private static string ColorTextYellow(string str)
     {
-        return "<color=yellow>" + str + "</yellow>";
+        return "<color=yellow>" + str + "</color>";
     }
 
     private static string BorderText(string str)

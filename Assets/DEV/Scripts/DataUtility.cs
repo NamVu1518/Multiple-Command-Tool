@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using Unity.VisualScripting.FullSerializer;
+using System.Text;
 
 public class DataUtility
 {
@@ -20,9 +21,9 @@ public class DataUtility
                 isMiddelMarks = !isMiddelMarks;
                 if (!hasMarks) hasMarks = true;
             }
-            if (str[j + 1] == ',' && isMiddelMarks == true)
+            if (str[j] == ',' && isMiddelMarks == true)
             {
-                str = str.Substring(0, j + 1) + pwdComma + str.Substring(j + 2);
+                str = str.Substring(0, j) + pwdComma + str.Substring(j + 1);
             }
         }
 
@@ -30,13 +31,21 @@ public class DataUtility
         {
             str = str.Replace("\"", "");
         }
+        
+        List<string> listStr = str.Split(',').Select(x => x.Replace(pwdComma, ",")).ToList();
 
-        return str.Split(',').Select(x => x.Replace(pwdComma, ",")).ToList();
+        return listStr;
     }
 
     public static string Standardized(string str)
     {
         return Regex.Replace(VietnameseProcess.Instance.RemoveSign4VietnameseString(str),"[^a-zA-Z0-9]","");
+    }
+
+    public static string StringCleaner(string str)
+    {
+        string reStr = str.Trim().Replace("\r", "").Replace(",", "").Replace("\t", "");
+        return reStr;
     }
 
     public static string[] RemoveNullCellCSV(string str)
@@ -45,9 +54,9 @@ public class DataUtility
 
         for (int i = strList.Count - 1; i >= 0; i--)
         {
-            if (string.IsNullOrEmpty(strList[i]))
+            if (string.IsNullOrWhiteSpace(strList[i]))
             {
-                strList.Remove(strList[i]);
+                strList.RemoveAt(i);
                 continue;
             }
 
@@ -55,6 +64,46 @@ public class DataUtility
         }
 
         return strList.ToArray();
+    }
+
+    public static string ConvertToVisibleString(string input)
+    {
+        if (input == null)
+        {
+            return "null";
+        }
+
+        StringBuilder visibleString = new StringBuilder();
+        foreach (char c in input)
+        {
+            switch (c)
+            {
+                case ' ':
+                    visibleString.Append("\\s");
+                    break;
+                case '\n':
+                    visibleString.Append("\\n");
+                    break;
+                case '\t':
+                    visibleString.Append("\\t");
+                    break;
+                case '\r':
+                    visibleString.Append("\\r");
+                    break;
+                default:
+                    if (char.IsControl(c))
+                    {
+                        visibleString.Append("\\u" + ((int)c).ToString("x4"));
+                    }
+                    else
+                    {
+                        visibleString.Append(c);
+                    }
+                    break;
+            }
+        }
+
+        return visibleString.ToString();
     }
 
     public static bool IsEmptyRow(string row)
@@ -106,11 +155,12 @@ public class DataUtility
             int min = Math.Min(CountCol(rows[i]), data.GetLength(1));
             int count = 0;
 
+            string[] strings = RemoveNullCellCSV(rows[i]);
             for (int j = 0; j < data.GetLength(1); j++)
             {
                 if (min == 0) break;
 
-                data[i, j] = RemoveNullCellCSV(rows[i])[j];
+                data[i, j] = StringCleaner(strings[j]);
 
                 count++;
                 if (count >= min) break;

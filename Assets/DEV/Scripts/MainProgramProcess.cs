@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using SFB;
 using System;
+using Ookii.Dialogs;
 
 public enum MODE
 {
@@ -25,8 +26,12 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
 {
     private MODE mode = MODE.CREATE_USER;
 
+    public MODE Mode => mode;
+
     private MultipleChoise multipleChoise;
   
+    public MultipleChoise MultipleChoise => multipleChoise;
+
     private CreateUserProcess createUserProcess = new CreateUserProcess();
 
     public CreateUserProcess CreateUserProcess
@@ -51,6 +56,14 @@ public class MainProgramProcess : Singleton<MainProgramProcess>
         if (mode == MODE.CREATE_USER)
         {
             createUserProcess.PrcessingRun();
+        }
+    }
+
+    public void GetFileRunOnly()
+    {
+        if (mode == MODE.CREATE_USER && multipleChoise == MultipleChoise.MULTIPLE)
+        {
+            createUserProcess.PrcessingRun(false);
         }
     }
 

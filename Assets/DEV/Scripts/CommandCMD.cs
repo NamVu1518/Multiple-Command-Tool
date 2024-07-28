@@ -99,15 +99,36 @@ public static class CommandCMD
         return command;
     }
 
-    public static void RunBat(string path)
+    public static void RunCommandPS1(string command, bool noWindow)
     {
-        Process batProc = new Process();
-        batProc.StartInfo.FileName = path;
-        batProc.StartInfo.UseShellExecute = true;
-        batProc.StartInfo.CreateNoWindow = false;
-        batProc.Start();
+        Process proc = new Process();
+        proc.StartInfo.FileName = "powershell.exe";
+        proc.StartInfo.Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"";
+        proc.StartInfo.UseShellExecute = !noWindow;
+        proc.StartInfo.CreateNoWindow = noWindow;
+        proc.StartInfo.RedirectStandardOutput = noWindow;
+        proc.StartInfo.RedirectStandardError = noWindow;
+        proc.Start();
 
-        batProc.WaitForExit();
+        if (noWindow)
+        {
+            string output = proc.StandardOutput.ReadToEnd();
+            string error = proc.StandardError.ReadToEnd();
+
+            if (!string.IsNullOrEmpty(output))
+            {
+                LogString.LogSystem(output);
+            }
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                LogString.LogError(error);
+            }
+        }
+
+        proc.WaitForExit();
+
+        proc.Close();
 
         LogString.LogSystem(LogString.Log.System.SYS_DONE);
         ProgramLifeCycle.Instance.ChangStatus(LifeStatus.ON_WAIT);
@@ -117,7 +138,7 @@ public static class CommandCMD
     {
         OU = VietnameseProcess.Instance.RemoveSign4VietnameseString(OU);
         string[] result = OU.Split("/");
-        if (result.Length <= 0) LogString.LogError(LogString.Log.Error.ERR_OU001);
+        if (!string.IsNullOrEmpty(OU) && result.Length <= 0) LogString.LogError(LogString.Log.Error.ERR_OU001);
         return result;
     }
 
@@ -129,7 +150,7 @@ public static class CommandCMD
         return result;
     }
 
-    public static void WriteFileBat(string str, string part)
+    public static void WriteFilePS1(string str, string part)
     {
         using (FileStream fs = new FileStream(part, FileMode.Create, FileAccess.Write))
         {
